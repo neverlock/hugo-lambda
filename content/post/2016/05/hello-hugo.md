@@ -1,20 +1,23 @@
 +++
 date = "2016-04-30T16:44:45+09:00"
 draft = false
-title = "Hello Hugo!"
-slug = "hello-hugo"
-categories = ["tech"]
+title = "First blog on nginx.conf.in.th"
+slug = "first-nginx-conf-in-th"
+categories = ["nginx"]
 tags = [
   "hugo",
   "golang",
   ]
 +++
-Hello Hugo! bradfasfdasfasfasdfasdf asdfa sf asdf asdfas
-fasdfasd
-fa
-sf
-asd
+** First Post on nginx.conf.in.th
 ![test img](/2016/05/test.png)
-fasdfasdfasfasdfasfasdfasdfasdf fasfds fa fda sdf asfasdf
-adafasfasdfasdfasdfas
-fasdfadfadsfasdf
+```golang
+package main
+import (
+	"fmt"
+	)
+
+func main(){
+	fmt.Println("Hello nginx.conf.in.th")
+}
+```
