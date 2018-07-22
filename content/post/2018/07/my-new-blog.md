@@ -1,7 +1,7 @@
 +++
 date = 2018-07-22T16:10:05+07:00
 draft = false
-title = "เย้ Blog ใหม่"
+title = "ย้าย Blog ใหม่มาพร้อมท่ายาก"
 slug = "my-new-blog"
 og_image = "2018/07/hard.jpg"
 categories = ["aws"]
