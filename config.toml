@@ -3,6 +3,8 @@ languageCode = "en-us"
 title = "Nginx.conf.in.th"
 theme = "geppaku"
 disqusShortname = "nginx-conf-in-th"
+googleAnalytics = "UA-67219536-2"
+
 
 [author]
     # If you want to display author information set these
