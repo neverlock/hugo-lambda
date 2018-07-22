@@ -9,7 +9,11 @@ tags = [
   "golang",
   ]
 +++
-** First Post on nginx.conf.in.th
+# First Post on nginx.conf.in.th
+
+ทดสอบภาษาไทยด้วย
+
+
 ![test img](/2018/05/test.png)
 ```golang
 package main
