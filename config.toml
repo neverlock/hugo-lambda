@@ -2,3 +2,23 @@ baseURL = "http://nginx.conf.in.th/"
 languageCode = "en-us"
 title = "Nginx.conf.in.th"
 theme = "geppaku"
+disqusShortname = "nginx-conf-in-th"
+
+[author]
+    # If you want to display author information set these
+    # This is Optional values
+    name = "Neverlock"
+
+    # Please set account ids
+    # This is Optional values
+    twitter  = "neverlock"
+    github   = "neverlock"
+
+[params]
+    [params.sharebutton]
+        # If you want to display share buttons set these
+        # This is Optional values
+        twitter  = true
+        facebook = true
+        # hatena   = true # hatena is Japanese social media
+        google   = true
