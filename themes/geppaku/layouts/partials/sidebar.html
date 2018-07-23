@@ -1,14 +1,5 @@
 <div class="sidebar">
-  {{ with .Site.Params.adsense.sidebar }}
-  <div class="sidebar-content">
-    <div class="sidebar-header">
-      <span>Sponsored link</span>
-    </div>
-    <div class="adsense">
-      {{ partial . }}
-    </div>
-  </div>
-  {{ end }}
+	<!-- old ads position -->
   {{ if .Site.Author }}
   <div class="sidebar-content">
     <div class="sidebar-header">
@@ -58,5 +49,15 @@
         <i class="fa fa-rss-square fa-2x" aria-hidden="true"></i>
       </a>
     </div>
+  {{ with .Site.Params.adsense.sidebar }}
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <span>Sponsored link</span>
+    </div>
+    <div class="adsense">
+      {{ partial . }}
+    </div>
+  </div>
+  {{ end }}
   </div>
 </div>
