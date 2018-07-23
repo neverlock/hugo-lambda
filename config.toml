@@ -1,7 +1,8 @@
 baseURL = "http://nginx.conf.in.th/"
 languageCode = "en-us"
 title = "Nginx.conf.in.th"
-theme = "geppaku"
+#theme = "geppaku"
+theme = "hugo-theme-air"
 disqusShortname = "nginx-conf-in-th"
 googleAnalytics = "UA-67219536-2"
 
@@ -17,6 +18,10 @@ googleAnalytics = "UA-67219536-2"
     github   = "neverlock"
 
 [params]
+#for air theme START
+description = "let's rock with nginx"
+googleAnalyticsUserID = "UA-67219536-2"
+#for air theme END
     [params.sharebutton]
         # If you want to display share buttons set these
         # This is Optional values
