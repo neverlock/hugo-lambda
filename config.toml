@@ -30,5 +30,5 @@ googleAnalytics = "UA-67219536-2"
         # This is Optional values
         # 1. Create file written of the adsense tag into the directory "layouts/partials"
         # 2. Please set file path name omitted "layouts/partials"
-        #sidebar = "adsense/sidebar.html"
-        content = "adsense/content.html"
+        sidebar = "adsense/sidebar.html"
+        #content = "adsense/content.html"
