@@ -115,6 +115,11 @@ $~/go/bin/pprof -http=:6060 your_program_bin cpu.pprof
 
 ```
 $~/go/bin/pprof -http=:6060 your_program_bin http://127.0.0.1:8080/debug/pprof/profile
+
+profiling memory
+
+$ go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/heap
+$ go tool pprof -alloc_objects goprofex http://127.0.0.1:8080/debug/pprof/heap
 ```
 
 ## วิธีใช้ go tool trace
