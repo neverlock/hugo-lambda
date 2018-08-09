@@ -158,3 +158,14 @@ $ go tool trace trace.out
 ```
 
 ข้อมูลเพิ่มเติม https://making.pusher.com/go-tool-trace/
+
+## Flame graph ของ Uber 
+
+```
+git clone https://github.com/brendangregg/FlameGraph.git ลงใน current DIR ที่จะให้สร้าง flame graph
+go get github.com/uber/go-torch
+~/go/bin/go-torch your_bin cpu.pprof
+or 
+~/go/bin/go-torch -seconds 5 -u http://my-service:8080/
+```
+
