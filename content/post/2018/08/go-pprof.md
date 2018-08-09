@@ -35,6 +35,8 @@ $ go tool pprof cpu.out
 (pprof) web list algOne
 or
 (pprof) web
+(pprof) top10
+(pprof) top10 -cum
 ```
 
 ## เก็บผ่าน http
