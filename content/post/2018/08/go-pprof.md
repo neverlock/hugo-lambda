@@ -151,6 +151,15 @@ func main() {
 }
 ```
 
+หรือ 
+
+```golang
+import "github.com/pkg/profile"
+main (){
+defer profile.Start(profile.TraceProfile).Stop()
+}
+```
+
 * เรียกใช้งาน
 
 ```
