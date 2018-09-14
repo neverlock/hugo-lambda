@@ -158,13 +158,17 @@ sysbench --db-driver=mysql --oltp-table-size=100000 --oltp-tables-count=24 --thr
 
 ![prepare](/2018/09/sysbench-prepare.png)
 
+Prepare ข้อมูลเสร็จ นั่งดู process ส่วนของการเก็บ data กิน cpu มาหน่อยไม่รู้มัน sync กันอยู่หรือเปล่าเลยรอแป๊บหนึ่ง
+
+![run](/2018/09/sysbench-run.png)
+
 ```
 sysbench --db-driver=mysql --report-interval=2 --mysql-table-engine=innodb --oltp-table-size=100000 --oltp-tables-count=24 --threads=16 --time=60 --mysql-host=tidb --mysql-port=4000 --mysql-user=root /usr/share/sysbench/tests/include/oltp_legacy/oltp.lua run
 ```
 
-![run](/2018/09/sysbench-run.png)
+![run](/2018/09/sysbench-run2.png)
 
-
+ผลการทำ benchmark ได้ไม่สูงเท่าไร 14k transection เอาไว้ up speed network ระหว่างเครื่องเดี๋ยวค่อยลองอีกที
 
 
 
