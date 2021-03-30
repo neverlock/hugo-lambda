@@ -294,6 +294,7 @@ func (v *ViduExporter) Collect(ch chan<- prometheus.Metric) {
 ```
 
 * และ Implement function ที่ทำหน้าที่ collect data ให้เรา
+
 ```golang
 func (v *ViduExporter) ReallyExpensiveAssessmentOfTheSystemState() (objectByHost map[string]int) {
 	session, connection, err := getSessionNumber(v.Host, v.User, v.Pass)
