@@ -414,4 +414,7 @@ func GetConnectionActive(js []byte) int {
 }
 ```
 
-** ตัวอย่าง code ดูได้จาก https://github.com/neverlock/openvidu-exporter/
+<img src="/2021/03/prometheus-example1.png"/>
+
+* ตัวอย่าง code ดูได้จาก https://github.com/neverlock/openvidu-exporter/
+
