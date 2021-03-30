@@ -331,6 +331,7 @@ func getSessionNumber(host string, user string, pass string) (int, int, error) {
 ```
 
 * ใน function สำหรับ collect data นั้นจะเรียกใช้ package session ที่ทำหน้าที่ parser json ของ vidu api  โดยมี code ประมาณนี้
+
 ```golang
 package session
 
