@@ -21,6 +21,7 @@ tags = [
 แบบที่ 2 จะเหมาะสำหรับงานที่ต้องการจะดึงข้อมูลเยอะๆแล้วทำงานช้าให้ระบบทำการเก็บข้อมูลไว้รอตลอดเวลาเมื่อมีการ request http มาหา exporter จะสามารถแสดงข้อมูลได้ทันที และงานที่จะต้องเก็บค่า แบบ increse ขึ้นเรื่อยๆระบบนี้จะทำการเก็บข้อมูลดังกล่าวเป็น background ตลอดเวลา
 
 ## ตัวอย่างการเขียน exporter แบบแรก
+
 ```golang
 package main
 
@@ -71,6 +72,7 @@ func main() {
 ```
 
 ## ตัวอย่างการเขียน exporter แบบที่ 2
+
 ```golang
 package main
 
@@ -262,6 +264,7 @@ func NewExporter(viduHost string, viduUsername string, viduPassword string) *Vid
 ```
 
 * ใน function NewExporter จะ return struct ViduExporter ซึ่ง struct นี้จะเก็บข้อมูลต่างๆที่เราต้องการและเราจะฝาก host,user และ password ไว้ใน struct นี้ ด้วยเพื่อนำส่งไปที่ function สำหรับดึงค่าจาก api ในแต่ละ host 
+
 ```golang
 type ViduExporter struct {
 	Host               string
@@ -279,6 +282,7 @@ func (v *ViduExporter) Describe(ch chan<- *prometheus.Desc) {
 ```
 
 * และ Implement Collect Interface
+
 ```golang
 func (v *ViduExporter) Collect(ch chan<- prometheus.Metric) {
 	objectByHost := v.ReallyExpensiveAssessmentOfTheSystemState()
@@ -420,4 +424,128 @@ func GetConnectionActive(js []byte) int {
 <img src="/2021/03/prometheus-example1.png"/>
 
 * ตัวอย่าง code ดูได้จาก https://github.com/neverlock/openvidu-exporter/
+
+## Requirement เพิ่มเติม
+
+* เนื่องจาก code version แรกเป็นการเก็บค่า session ที่เกิดขึ้นในระบบ และ connection รวมของแต่ละ session ซึ่งเป็นแค่ภาพรวมของระบบ อยากจะเก็บข้อมูลให้ละเอียดขึ้น โดยเก็บข้อมูล ว่าแต่ละ session นั้นมีกี่ connection ที่เกิดขึ้น จึงต้องมีการ ปรับ code เพิ่มเติมดังนี้
+
+
+* ใน function NewExporter เพิ่มการ เก็บข้อมูลของ vidu_connection_per_session เข้ามา
+
+```golang
+func NewExporter(viduHost string, viduUsername string, viduPassword string) *ViduExporter {
+	return &ViduExporter{
+		Host: viduHost,
+		User: viduUsername,
+		Pass: viduPassword,
+		ViduSessionAPIDesc: prometheus.NewDesc(
+			"vidu_session_usage",
+			"Number of session use in OpenVidu server",
+			[]string{"object"},
+			prometheus.Labels{"host": viduHost},
+		),
+		ViduConnectionPerSessionDesc: prometheus.NewDesc(
+			"vidu_connection_per_session",
+			"Number of connection in each session in  OpenVidu server",
+			[]string{"sessionID"},
+			prometheus.Labels{"host": viduHost},
+		),
+	}
+
+}
+```
+
+* เมื่อมีการเพิ่มข้อมูลใน return ของ function NewExporter แล้วก็ต้องไปเพิ่ม ข้อมูลที่ struct ViduExporter ให้ตรงด้วย
+
+```golang
+type ViduExporter struct {
+	Host                         string
+	User                         string
+	Pass                         string
+	ViduSessionAPIDesc           *prometheus.Desc //Session or Connection
+	ViduConnectionPerSessionDesc *prometheus.Desc
+}
+```
+
+* แก้ interface Describe เพื่อข้อมูลที่จะ describe
+
+```golang
+func (v *ViduExporter) Describe(ch chan<- *prometheus.Desc) {
+	ch <- v.ViduSessionAPIDesc
+	ch <- v.ViduConnectionPerSessionDesc
+}
+```
+
+* แก้ interface Collect เพิ่มข้อมูลที่จะเก็บ
+
+```golang
+func (v *ViduExporter) Collect(ch chan<- prometheus.Metric) {
+	objectByHost, sessionByHost := v.ReallyExpensiveAssessmentOfTheSystemState()
+	for object, scount := range objectByHost {
+		ch <- prometheus.MustNewConstMetric(
+			v.ViduSessionAPIDesc,
+			prometheus.GaugeValue,
+			float64(scount),
+			object,
+		)
+	}
+	for sessionid, ccount := range sessionByHost {
+		ch <- prometheus.MustNewConstMetric(
+			v.ViduConnectionPerSessionDesc,
+			prometheus.GaugeValue,
+			float64(ccount),
+			sessionid,
+		)
+	}
+}
+```
+
+* จากนั้น ปรับแก้ function getSessionNumber ให้เพิ่มส่วนของการ loop เพื่อเก็บค่าลงใน map[string]int เพื่อที่จะ return ให้ interface ReallyExpensiveAssessmentOfTheSystemState ส่งต่อไปให้ Collect
+
+```golang
+func (v *ViduExporter) ReallyExpensiveAssessmentOfTheSystemState() (objectByHost map[string]int, sessionByHost map[string]int) {
+	session, connection, connectionInsession, err := getSessionNumber(v.Host, v.User, v.Pass)
+	if err != nil {
+		return
+	}
+	objectByHost = map[string]int{
+		"session":    session,
+		"connection": connection,
+	}
+	sessionByHost = connectionInsession
+	return
+}
+
+func getSessionNumber(host string, user string, pass string) (int, int, map[string]int, error) {
+	req, err := http.NewRequest("GET", host+SESSION_API_ENDPOINT, nil)
+	if err != nil {
+		return 0, 0, nil, err
+	}
+
+	req.SetBasicAuth(user, pass)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return 0, 0, nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+	if err != nil {
+		return 0, 0, nil, err
+	}
+	sessionCount := session.GetSessionActive(body)
+
+	//collect connection from each sessionID in to map[sessionID]connection
+	connectionInsession := make(map[string]int)
+	for i := 0; i < sessionCount; i++ {
+		connectionInsession[session.GetSessionID(body, i)] = session.GetConnectionInSession(body, i)
+	}
+	return sessionCount, session.GetConnectionActive(body), connectionInsession, nil
+}
+```
+<img src="/2021/03/prometheus-example2.png"/>
+
+
+
 
